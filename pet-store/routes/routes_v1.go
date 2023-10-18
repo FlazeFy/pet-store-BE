@@ -16,7 +16,10 @@ func InitV1() *echo.Echo {
 
 	// =============== Public routes ===============
 
-	// Skill
+	// Dictionary
+	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)
+
+	// Tag
 	e.GET("api/v1/tag", syshandlers.GetAllTag)
 
 	// =============== Private routes (Admin) ===============

@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"fmt"
 	"math"
 	"net/http"
 	"pet-store/modules/systems/models"
@@ -12,20 +11,21 @@ import (
 	"pet-store/packages/utils/pagination"
 )
 
-func GetAllTag(page, pageSize int, path string) (response.Response, error) {
+func GetDictionaryByType(page, pageSize int, path string, dctType string) (response.Response, error) {
 	// Declaration
-	var obj models.GetAllTag
-	var arrobj []models.GetAllTag
+	var obj models.GetDictionaryByType
+	var arrobj []models.GetDictionaryByType
 	var res response.Response
-	var baseTable = "tags"
+	var baseTable = "dictionaries"
 	var sqlStatement string
 
 	// Query builder
-	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	order := "tags_name DESC "
+	where := "dictionary_type = '" + dctType + "' "
+	order := "dictionary_name DESC "
 
-	sqlStatement = "SELECT " + selectTemplate + " " +
+	sqlStatement = "SELECT id, dictionaries_type, dictionaries_name " +
 		"FROM " + baseTable + " " +
+		"WHERE " + where +
 		"ORDER BY " + order +
 		"LIMIT ? OFFSET ?"
 
@@ -34,7 +34,6 @@ func GetAllTag(page, pageSize int, path string) (response.Response, error) {
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
@@ -43,8 +42,9 @@ func GetAllTag(page, pageSize int, path string) (response.Response, error) {
 	// Map
 	for rows.Next() {
 		err = rows.Scan(
-			&obj.TagSlug,
-			&obj.TagName,
+			&obj.ID,
+			&obj.DctName,
+			&obj.DctType,
 		)
 
 		if err != nil {
@@ -55,7 +55,7 @@ func GetAllTag(page, pageSize int, path string) (response.Response, error) {
 	}
 
 	// Page
-	total, err := builders.GetTotalCount(con, baseTable, nil)
+	total, err := builders.GetTotalCount(con, baseTable, &where)
 	if err != nil {
 		return res, err
 	}
