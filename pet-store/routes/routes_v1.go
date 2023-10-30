@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	fehandlers "pet-store/modules/doc/http_handlers"
 	syshandlers "pet-store/modules/systems/http_handlers"
 
 	"github.com/labstack/echo"
@@ -21,6 +22,9 @@ func InitV1() *echo.Echo {
 
 	// Tag
 	e.GET("api/v1/tag", syshandlers.GetAllTag)
+
+	// Tag
+	e.GET("api/v1/animal", fehandlers.GetAllAnimals)
 
 	// =============== Private routes (Admin) ===============
 

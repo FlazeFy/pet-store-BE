@@ -1,9 +1,10 @@
 package repositories
 
 import (
+	"fmt"
 	"math"
 	"net/http"
-	"pet-store/modules/systems/models"
+	"pet-store/modules/animals/models"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
 	"pet-store/packages/helpers/generator"
@@ -11,21 +12,20 @@ import (
 	"pet-store/packages/utils/pagination"
 )
 
-func GetDictionaryByType(page, pageSize int, path string, dctType string) (response.Response, error) {
+func GetAllAnimals(page, pageSize int, path string, ord string) (response.Response, error) {
 	// Declaration
-	var obj models.GetDictionaryByType
-	var arrobj []models.GetDictionaryByType
+	var obj models.GetAnimals
+	var arrobj []models.GetAnimals
 	var res response.Response
-	var baseTable = "dictionaries"
+	var baseTable = "animals"
 	var sqlStatement string
 
 	// Query builder
-	where := "dictionaries_type = '" + dctType + "' "
-	order := "dictionaries_name DESC "
+	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+	order := "tags_name DESC "
 
-	sqlStatement = "SELECT id, dictionaries_type, dictionaries_name " +
+	sqlStatement = "SELECT " + selectTemplate + ", animal_bio, animal_gender, animal_price, animal_stock " +
 		"FROM " + baseTable + " " +
-		"WHERE " + where +
 		"ORDER BY " + order +
 		"LIMIT ? OFFSET ?"
 
@@ -34,6 +34,7 @@ func GetDictionaryByType(page, pageSize int, path string, dctType string) (respo
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
+	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
@@ -42,9 +43,12 @@ func GetDictionaryByType(page, pageSize int, path string, dctType string) (respo
 	// Map
 	for rows.Next() {
 		err = rows.Scan(
-			&obj.ID,
-			&obj.DctName,
-			&obj.DctType,
+			&obj.AnimalSlug,
+			&obj.AnimalName,
+			&obj.AnimalBio,
+			&obj.AnimalGender,
+			&obj.AnimalPrice,
+			&obj.AnimalStock,
 		)
 
 		if err != nil {
@@ -55,7 +59,7 @@ func GetDictionaryByType(page, pageSize int, path string, dctType string) (respo
 	}
 
 	// Page
-	total, err := builders.GetTotalCount(con, baseTable, &where)
+	total, err := builders.GetTotalCount(con, baseTable, nil)
 	if err != nil {
 		return res, err
 	}
