@@ -18,3 +18,13 @@ func GetAllPlants(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetPlantDetailBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	result, err := repositories.GetPlantDetailBySlug("api/v1/plant/detail/"+slug, slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

@@ -2,11 +2,24 @@ package models
 
 type (
 	GetPlants struct {
-		ID         string `json:"id"`
-		PlantSlug  string `json:"plant_slug"`
-		PlantName  string `json:"plant_name"`
-		PlantBio   string `json:"plant_bio"`
-		PlantPrice string `json:"plant_price"`
-		PlantStock string `json:"plant_stock"`
+		PlantSlug  string `json:"plants_slug"`
+		PlantName  string `json:"plants_name"`
+		PlantBio   string `json:"plants_bio"`
+		PlantPrice string `json:"plants_price"`
+		PlantStock string `json:"plants_stock"`
+	}
+	GetPlantDetail struct {
+		PlantSlug   string `json:"plants_slug"`
+		PlantName   string `json:"plants_name"`
+		PlantBio    string `json:"plants_bio"`
+		PlantPrice  string `json:"plants_price"`
+		PlantStock  string `json:"plants_stock"`
+		PlantDetail string `json:"plants_detail"`
+
+		// Props
+		CreatedAt string `json:"created_at"`
+		CreatedBy string `json:"created_by"`
+		UpdatedAt string `json:"updated_at"`
+		UpdatedBy string `json:"updated_by"`
 	}
 )
