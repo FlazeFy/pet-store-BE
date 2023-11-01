@@ -25,10 +25,12 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/tag", syshandlers.GetAllTag)
 
 	// Animals
-	e.GET("api/v1/animal", animalhandlers.GetAllAnimals)
+	e.GET("api/v1/animal/:order", animalhandlers.GetAllAnimals)
+	e.GET("api/v1/animal/detail/:slug", animalhandlers.GetAnimalDetailBySlug)
 
 	// Plants
-	e.GET("api/v1/plant", planthandlers.GetAllPlants)
+	e.GET("api/v1/plant/:order", planthandlers.GetAllPlants)
+	e.GET("api/v1/plant/detail/:slug", planthandlers.GetPlantDetailBySlug)
 
 	// =============== Private routes (Admin) ===============
 

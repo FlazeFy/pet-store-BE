@@ -5,8 +5,10 @@ import "pet-store/packages/helpers/typography"
 func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	if name == "content_info" {
 		return *firstTable + "_slug," + *firstTable + "_name"
-	} else if name == "properties" {
+	} else if name == "properties_time" {
 		return "created_at, updated_at"
+	} else if name == "properties_full" {
+		return "created_at, created_by, updated_at, updated_by"
 	}
 	return ""
 }

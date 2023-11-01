@@ -2,12 +2,27 @@ package models
 
 type (
 	GetAnimals struct {
-		ID           string `json:"id"`
-		AnimalSlug   string `json:"animal_slug"`
-		AnimalName   string `json:"animal_name"`
-		AnimalBio    string `json:"animal_bio"`
-		AnimalGender string `json:"animal_gender"`
-		AnimalPrice  string `json:"animal_price"`
-		AnimalStock  string `json:"animal_stock"`
+		AnimalSlug   string `json:"animals_slug"`
+		AnimalName   string `json:"animals_name"`
+		AnimalBio    string `json:"animals_bio"`
+		AnimalGender string `json:"animals_gender"`
+		AnimalPrice  string `json:"animals_price"`
+		AnimalStock  string `json:"animals_stock"`
+	}
+	GetAnimalDetail struct {
+		AnimalSlug     string `json:"animals_slug"`
+		AnimalName     string `json:"animals_name"`
+		AnimalBio      string `json:"animals_bio"`
+		AnimalGender   string `json:"animals_gender"`
+		AnimalPrice    string `json:"animals_price"`
+		AnimalStock    string `json:"animals_stock"`
+		AnimalDateBorn string `json:"animals_date_born"`
+		AnimalDetail   string `json:"animals_detail"`
+
+		// Props
+		CreatedAt string `json:"created_at"`
+		CreatedBy string `json:"created_by"`
+		UpdatedAt string `json:"updated_at"`
+		UpdatedBy string `json:"updated_by"`
 	}
 )

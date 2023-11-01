@@ -1,12 +1,14 @@
 package repositories
 
 import (
+	"database/sql"
 	"fmt"
 	"math"
 	"net/http"
 	"pet-store/modules/animals/models"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
+	"pet-store/packages/helpers/converter"
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
 	"pet-store/packages/utils/pagination"
@@ -22,11 +24,11 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	order := "tags_name DESC "
+	order := "animals_name " + ord
 
-	sqlStatement = "SELECT " + selectTemplate + ", animal_bio, animal_gender, animal_price, animal_stock " +
+	sqlStatement = "SELECT " + selectTemplate + ", animals_bio, animals_gender, animals_price, animals_stock " +
 		"FROM " + baseTable + " " +
-		"ORDER BY " + order +
+		"ORDER BY " + order + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec
@@ -88,6 +90,86 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 			"to":             pagination.To,
 			"total":          total,
 		}
+	}
+
+	return res, nil
+}
+
+func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) {
+	// Declaration
+	var obj models.GetAnimalDetail
+	var arrobj []models.GetAnimalDetail
+	var res response.Response
+	var baseTable = "animals"
+	var sqlStatement string
+
+	// Nullable column
+	var AnimalDateBorn sql.NullString
+	var UpdatedAt sql.NullString
+	var UpdatedBy sql.NullString
+
+	// Query builder
+	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+	propsTemplate := builders.GetTemplateSelect("properties_full", nil, nil)
+
+	sqlStatement = "SELECT " + selectTemplate + ", animals_bio, animals_gender, animals_price, animals_stock, animals_date_born, animals_detail, " + propsTemplate + " " +
+		"FROM " + baseTable + " " +
+		"WHERE animals_slug = '" + slug + "'"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	fmt.Println(sqlStatement)
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.AnimalSlug,
+			&obj.AnimalName,
+			&obj.AnimalBio,
+			&obj.AnimalGender,
+			&obj.AnimalPrice,
+			&obj.AnimalStock,
+			&AnimalDateBorn,
+			&obj.AnimalDetail,
+
+			// Props
+			&obj.CreatedAt,
+			&obj.CreatedBy,
+			&UpdatedAt,
+			&UpdatedBy,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		obj.AnimalDateBorn = converter.CheckNullString(AnimalDateBorn)
+		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
+		obj.UpdatedBy = converter.CheckNullString(UpdatedBy)
+
+		arrobj = append(arrobj, obj)
+	}
+
+	// Page
+	total, err := builders.GetTotalCount(con, baseTable, nil)
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, total)
+	if total == 0 {
+		res.Data = nil
+	} else {
+		res.Data = arrobj
 	}
 
 	return res, nil
