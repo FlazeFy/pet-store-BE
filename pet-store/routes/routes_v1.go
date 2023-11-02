@@ -5,6 +5,7 @@ import (
 	animalhandlers "pet-store/modules/animals/http_handlers"
 	planthandlers "pet-store/modules/plants/http_handlers"
 	syshandlers "pet-store/modules/systems/http_handlers"
+	wohandlers "pet-store/modules/warehouse/http_handlers"
 
 	"github.com/labstack/echo"
 )
@@ -31,6 +32,10 @@ func InitV1() *echo.Echo {
 	// Plants
 	e.GET("api/v1/plant/:order", planthandlers.GetAllPlants)
 	e.GET("api/v1/plant/detail/:slug", planthandlers.GetPlantDetailBySlug)
+
+	// Shelf
+	e.GET("api/v1/shelf/:order", wohandlers.GetAllActiveShelf)
+	e.GET("api/v1/dump/shelf/:order", wohandlers.GetAllTrashShelf)
 
 	// =============== Private routes (Admin) ===============
 
