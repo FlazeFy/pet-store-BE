@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"math"
 	"net/http"
 	"pet-store/modules/plants/models"
@@ -24,7 +23,7 @@ func GetAllPlants(page, pageSize int, path string, ord string) (response.Respons
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	order := "plants_name " + ord
+	order := builders.GetTemplateOrder("dynamic_data", baseTable, "plants_name")
 
 	sqlStatement = "SELECT " + selectTemplate + ", plants_bio, plants_price, plants_stock " +
 		"FROM " + baseTable + " " +
@@ -36,7 +35,6 @@ func GetAllPlants(page, pageSize int, path string, ord string) (response.Respons
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
@@ -118,7 +116,6 @@ func GetPlantDetailBySlug(path string, slug string) (response.Response, error) {
 	con := database.CreateCon()
 	rows, err := con.Query(sqlStatement)
 	defer rows.Close()
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err

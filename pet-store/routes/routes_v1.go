@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 	animalhandlers "pet-store/modules/animals/http_handlers"
+	pplhandlers "pet-store/modules/people/http_handlers"
 	planthandlers "pet-store/modules/plants/http_handlers"
 	syshandlers "pet-store/modules/systems/http_handlers"
 	wohandlers "pet-store/modules/warehouse/http_handlers"
@@ -36,6 +37,9 @@ func InitV1() *echo.Echo {
 	// Shelf
 	e.GET("api/v1/shelf/:order", wohandlers.GetAllActiveShelf)
 	e.GET("api/v1/dump/shelf/:order", wohandlers.GetAllTrashShelf)
+
+	// Customer
+	e.GET("api/v1/customer/:view", pplhandlers.GetAllCustomer)
 
 	// =============== Private routes (Admin) ===============
 

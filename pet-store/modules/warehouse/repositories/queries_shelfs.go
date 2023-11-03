@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"math"
 	"net/http"
 	"pet-store/modules/warehouse/models"
@@ -45,7 +44,6 @@ func GetAllShelf(page, pageSize int, path string, view string, ord string) (resp
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err

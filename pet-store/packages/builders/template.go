@@ -1,7 +1,5 @@
 package builders
 
-import "pet-store/packages/helpers/typography"
-
 func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	if name == "content_info" {
 		return *firstTable + "_slug," + *firstTable + "_name"
@@ -16,14 +14,6 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 func GetTemplateConcat(name, col string) string {
 	if name == "value_group" {
 		return "GROUP_CONCAT(" + col + " SEPARATOR ', ') as " + col
-	}
-	return ""
-}
-
-func GetTemplateGeneralSelect(name string, firstTable *string) string {
-	ftable := typography.RemoveLastChar(*firstTable, "s")
-	if name == "info" {
-		return *firstTable + ".slug_name, " + ftable + "_name, " + ftable + "_desc"
 	}
 	return ""
 }

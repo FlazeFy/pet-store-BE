@@ -1,7 +1,6 @@
 package repositories
 
 import (
-	"fmt"
 	"math"
 	"net/http"
 	"pet-store/modules/systems/models"
@@ -34,7 +33,6 @@ func GetAllTag(page, pageSize int, path string) (response.Response, error) {
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
