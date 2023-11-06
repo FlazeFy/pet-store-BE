@@ -6,7 +6,7 @@ type (
 		AnimalName   string `json:"animals_name"`
 		AnimalBio    string `json:"animals_bio"`
 		AnimalGender string `json:"animals_gender"`
-		AnimalPrice  string `json:"animals_price"`
+		AnimalPrice  int    `json:"animals_price"`
 		AnimalStock  string `json:"animals_stock"`
 	}
 	GetAnimalDetail struct {
@@ -14,7 +14,7 @@ type (
 		AnimalName     string `json:"animals_name"`
 		AnimalBio      string `json:"animals_bio"`
 		AnimalGender   string `json:"animals_gender"`
-		AnimalPrice    string `json:"animals_price"`
+		AnimalPrice    int    `json:"animals_price"`
 		AnimalStock    string `json:"animals_stock"`
 		AnimalDateBorn string `json:"animals_date_born"`
 		AnimalDetail   string `json:"animals_detail"`

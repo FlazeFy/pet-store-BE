@@ -11,6 +11,7 @@ import (
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
 	"pet-store/packages/utils/pagination"
+	"strconv"
 )
 
 func GetAllAnimals(page, pageSize int, path string, ord string) (response.Response, error) {
@@ -20,6 +21,9 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 	var res response.Response
 	var baseTable = "animals"
 	var sqlStatement string
+
+	// Converted column
+	var AnimalPrice string
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
@@ -47,13 +51,21 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 			&obj.AnimalName,
 			&obj.AnimalBio,
 			&obj.AnimalGender,
-			&obj.AnimalPrice,
+			&AnimalPrice,
 			&obj.AnimalStock,
 		)
 
 		if err != nil {
 			return res, err
 		}
+
+		// Converted
+		intAnimalPrice, err := strconv.Atoi(AnimalPrice)
+		if err != nil {
+			return res, err
+		}
+
+		obj.AnimalPrice = intAnimalPrice
 
 		arrobj = append(arrobj, obj)
 	}
@@ -106,6 +118,9 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 	var UpdatedAt sql.NullString
 	var UpdatedBy sql.NullString
 
+	// Converted column
+	var AnimalPrice string
+
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_full", nil, nil)
@@ -130,7 +145,7 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 			&obj.AnimalName,
 			&obj.AnimalBio,
 			&obj.AnimalGender,
-			&obj.AnimalPrice,
+			&AnimalPrice,
 			&obj.AnimalStock,
 			&AnimalDateBorn,
 			&obj.AnimalDetail,
@@ -146,7 +161,14 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 			return res, err
 		}
 
+		// Converted
+		intAnimalPrice, err := strconv.Atoi(AnimalPrice)
+		if err != nil {
+			return res, err
+		}
+
 		obj.AnimalDateBorn = converter.CheckNullString(AnimalDateBorn)
+		obj.AnimalPrice = intAnimalPrice
 		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
 		obj.UpdatedBy = converter.CheckNullString(UpdatedBy)
 
