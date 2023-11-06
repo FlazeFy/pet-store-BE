@@ -20,3 +20,11 @@ func TotalChar(val string) int {
 	trimed := strings.TrimSpace(val)
 	return len(trimed)
 }
+
+func ConvertStringBool(val string) bool {
+	if val == "0" {
+		return false
+	} else {
+		return true
+	}
+}

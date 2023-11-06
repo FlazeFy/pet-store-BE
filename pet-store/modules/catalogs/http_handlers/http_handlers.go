@@ -18,3 +18,14 @@ func GetAllCatalogs(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetMyCart(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	ord := c.Param("order")
+	result, err := repositories.GetMyCart(page, 10, "api/v1/cart/"+ord, ord)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

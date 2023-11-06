@@ -40,6 +40,9 @@ func InitV1() *echo.Echo {
 	// Catalog (Animal & Plants)
 	e.GET("api/v1/catalog/:order", ctlghandlers.GetAllCatalogs)
 
+	// Carts
+	e.GET("api/v1/cart/:order", ctlghandlers.GetMyCart)
+
 	// Shelf
 	e.GET("api/v1/shelf/:order", wohandlers.GetAllActiveShelf)
 	e.GET("api/v1/dump/shelf/:order", wohandlers.GetAllTrashShelf)
