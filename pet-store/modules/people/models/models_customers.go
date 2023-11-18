@@ -6,4 +6,14 @@ type (
 		CustomerName  string `json:"customer_name"`
 		CustomerEmail string `json:"email"`
 	}
+	GetCustomersDetail struct {
+		CustomerSlug     string `json:"customer_slug"`
+		CustomerName     string `json:"customer_name"`
+		CustomerEmail    string `json:"email"`
+		CustomerInterest string `json:"customers_interest"`
+		IsNotifable      bool   `json:"is_notifable"`
+
+		// Props
+		CreatedAt string `json:"created_at"`
+	}
 )

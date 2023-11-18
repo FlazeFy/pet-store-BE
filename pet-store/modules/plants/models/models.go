@@ -5,8 +5,8 @@ type (
 		PlantSlug  string `json:"plants_slug"`
 		PlantName  string `json:"plants_name"`
 		PlantBio   string `json:"plants_bio"`
-		PlantPrice string `json:"plants_price"`
-		PlantStock string `json:"plants_stock"`
+		PlantPrice int    `json:"plants_price"`
+		PlantStock int    `json:"plants_stock"`
 	}
 	GetPlantDetail struct {
 		PlantSlug   string `json:"plants_slug"`

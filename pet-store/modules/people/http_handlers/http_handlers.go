@@ -18,3 +18,12 @@ func GetAllCustomer(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetMyProfile(c echo.Context) error {
+	result, err := repositories.GetMyProfile("api/v1/customer/my/profile")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

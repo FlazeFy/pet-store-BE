@@ -49,6 +49,7 @@ func InitV1() *echo.Echo {
 
 	// Customer
 	e.GET("api/v1/customer/:view", pplhandlers.GetAllCustomer)
+	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile)
 
 	// =============== Private routes (Admin) ===============
 

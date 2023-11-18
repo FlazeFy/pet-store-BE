@@ -24,6 +24,7 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 
 	// Converted column
 	var AnimalPrice string
+	var AnimalStock string
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
@@ -52,7 +53,7 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 			&obj.AnimalBio,
 			&obj.AnimalGender,
 			&AnimalPrice,
-			&obj.AnimalStock,
+			&AnimalStock,
 		)
 
 		if err != nil {
@@ -61,11 +62,13 @@ func GetAllAnimals(page, pageSize int, path string, ord string) (response.Respon
 
 		// Converted
 		intAnimalPrice, err := strconv.Atoi(AnimalPrice)
+		intAnimalStock, err := strconv.Atoi(AnimalStock)
 		if err != nil {
 			return res, err
 		}
 
 		obj.AnimalPrice = intAnimalPrice
+		obj.AnimalStock = intAnimalStock
 
 		arrobj = append(arrobj, obj)
 	}

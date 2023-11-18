@@ -11,6 +11,7 @@ import (
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
 	"pet-store/packages/utils/pagination"
+	"strconv"
 )
 
 func GetAllPlants(page, pageSize int, path string, ord string) (response.Response, error) {
@@ -20,6 +21,10 @@ func GetAllPlants(page, pageSize int, path string, ord string) (response.Respons
 	var res response.Response
 	var baseTable = "plants"
 	var sqlStatement string
+
+	// Converted column
+	var PlantPrice string
+	var PlantStock string
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
@@ -46,13 +51,23 @@ func GetAllPlants(page, pageSize int, path string, ord string) (response.Respons
 			&obj.PlantSlug,
 			&obj.PlantName,
 			&obj.PlantBio,
-			&obj.PlantPrice,
-			&obj.PlantStock,
+			&PlantPrice,
+			&PlantStock,
 		)
 
 		if err != nil {
 			return res, err
 		}
+
+		// Converted
+		intPlantPrice, err := strconv.Atoi(PlantPrice)
+		intPlantStock, err := strconv.Atoi(PlantStock)
+		if err != nil {
+			return res, err
+		}
+
+		obj.PlantPrice = intPlantPrice
+		obj.PlantStock = intPlantStock
 
 		arrobj = append(arrobj, obj)
 	}

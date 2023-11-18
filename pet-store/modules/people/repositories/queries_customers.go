@@ -112,3 +112,76 @@ func GetAllCustomer(page, pageSize int, path string, view string) (response.Resp
 
 	return res, nil
 }
+
+func GetMyProfile(path string) (response.Response, error) {
+	// Declaration
+	var obj models.GetCustomersDetail
+	var arrobj []models.GetCustomersDetail
+	var res response.Response
+	var baseTable = "customers"
+	var sqlStatement string
+
+	// Nullable column
+	var CustomerEmail sql.NullString
+	var CustomerInterest sql.NullString
+
+	// Converted column
+	var IsNotifable string
+
+	// Query builder
+	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+
+	sqlStatement = "SELECT " + selectTemplate + ", email, customers_interest, is_notifable, created_at " +
+		"FROM " + baseTable + " " +
+		"LIMIT 1" // For now
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+	fmt.Println(sqlStatement)
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.CustomerSlug,
+			&obj.CustomerName,
+			&CustomerEmail,
+			&CustomerInterest,
+			&IsNotifable,
+			&obj.CreatedAt,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		obj.CustomerEmail = converter.CheckNullString(CustomerEmail)
+		obj.CustomerInterest = converter.CheckNullString(CustomerInterest)
+
+		obj.IsNotifable = converter.ConvertStringBool(IsNotifable)
+
+		arrobj = append(arrobj, obj)
+	}
+
+	// Page
+	total, err := builders.GetTotalCount(con, baseTable, nil)
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, total)
+	if total == 0 {
+		res.Data = nil
+	} else {
+		res.Data = arrobj
+	}
+
+	return res, nil
+}

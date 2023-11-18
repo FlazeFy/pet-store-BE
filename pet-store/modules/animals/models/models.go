@@ -7,7 +7,7 @@ type (
 		AnimalBio    string `json:"animals_bio"`
 		AnimalGender string `json:"animals_gender"`
 		AnimalPrice  int    `json:"animals_price"`
-		AnimalStock  string `json:"animals_stock"`
+		AnimalStock  int    `json:"animals_stock"`
 	}
 	GetAnimalDetail struct {
 		AnimalSlug     string `json:"animals_slug"`
