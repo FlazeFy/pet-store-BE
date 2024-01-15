@@ -19,7 +19,6 @@ func GetAllShelf(page, pageSize int, path string, view string, ord string) (resp
 	var arrobj []models.GetAllShelfs
 	var res response.Response
 	var baseTable = "shelfs"
-	var secondTable = "dictionaries"
 	var sqlStatement string
 
 	// Nullable column
@@ -29,14 +28,12 @@ func GetAllShelf(page, pageSize int, path string, view string, ord string) (resp
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	firstLogicWhere := builders.GetTemplateLogic(view)
 	whereActive := baseTable + firstLogicWhere
-	join1 := builders.GetTemplateJoin("total", baseTable, "shelfs_category", secondTable, "id", true)
-	order := "shelfs_name DESC " + ord
+	order := "shelfs_name " + ord
 
-	sqlStatement = "SELECT " + selectTemplate + " " +
+	sqlStatement = "SELECT " + selectTemplate + ", shelfs_tag " +
 		"FROM " + baseTable + " " +
-		join1 +
 		"WHERE " + whereActive +
-		"ORDER BY " + order +
+		"ORDER BY " + order + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec
@@ -52,7 +49,6 @@ func GetAllShelf(page, pageSize int, path string, view string, ord string) (resp
 	// Map
 	for rows.Next() {
 		err = rows.Scan(
-			&obj.ShelfCategoryName,
 			&obj.ShelfSlug,
 			&obj.ShelfName,
 			&ShelfTag,

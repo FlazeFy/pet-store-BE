@@ -131,7 +131,7 @@ func GetMyProfile(path string) (response.Response, error) {
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", email, customers_interest, is_notifable, created_at " +
+	sqlStatement = "SELECT " + selectTemplate + ", email, customers_interest, customers_image, is_notifable, created_at " +
 		"FROM " + baseTable + " " +
 		"LIMIT 1" // For now
 
@@ -152,6 +152,7 @@ func GetMyProfile(path string) (response.Response, error) {
 			&obj.CustomerName,
 			&CustomerEmail,
 			&CustomerInterest,
+			&obj.CustomerImage,
 			&IsNotifable,
 			&obj.CreatedAt,
 		)

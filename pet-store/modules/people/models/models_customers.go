@@ -11,6 +11,7 @@ type (
 		CustomerName     string `json:"customer_name"`
 		CustomerEmail    string `json:"email"`
 		CustomerInterest string `json:"customers_interest"`
+		CustomerImage    string `json:"customers_image"`
 		IsNotifable      bool   `json:"is_notifable"`
 
 		// Props
