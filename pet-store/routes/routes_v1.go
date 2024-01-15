@@ -28,6 +28,8 @@ func InitV1() *echo.Echo {
 
 	// Tag
 	e.GET("api/v1/tag", syshandlers.GetAllTag)
+	e.POST("api/v1/tag", syshandlers.PostTag)
+	e.DELETE("api/v1/tag/destroy/:id", syshandlers.HardDelTagById)
 
 	// Animals
 	e.GET("api/v1/animal/:order", animalhandlers.GetAllAnimals)
