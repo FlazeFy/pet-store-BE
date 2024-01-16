@@ -32,3 +32,29 @@ func GetTotalCustomerByIsNotif(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetTotalCartIsPaid(c echo.Context) error {
+	ord := c.Param("ord")
+	view := "is_paid"
+	table := "carts"
+
+	result, err := repositories.GetTotalStats("api/v1/stats/cartispaid/"+ord, ord, view, table)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func GetTotalShelfIsActive(c echo.Context) error {
+	ord := c.Param("ord")
+	view := "is_active"
+	table := "shelfs"
+
+	result, err := repositories.GetTotalStats("api/v1/stats/shelfisactive/"+ord, ord, view, table)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

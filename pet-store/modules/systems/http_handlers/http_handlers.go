@@ -47,3 +47,22 @@ func PostTag(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func HardDelDctById(c echo.Context) error {
+	id := c.Param("id")
+	result, err := repositories.HardDelDctById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func PostDct(c echo.Context) error {
+	result, err := repositories.PostDct(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

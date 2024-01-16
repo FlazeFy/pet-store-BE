@@ -26,6 +26,8 @@ func InitV1() *echo.Echo {
 
 	// Dictionary
 	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)
+	e.POST("api/v1/dct", syshandlers.PostDct)
+	e.DELETE("api/v1/dct/destroy/:id", syshandlers.HardDelDctById)
 
 	// Tag
 	e.GET("api/v1/tag", syshandlers.GetAllTag)
@@ -66,6 +68,8 @@ func InitV1() *echo.Echo {
 	// Stats
 	e.GET("api/v1/stats/animalgender/:ord", stshandlers.GetTotalAnimalByGender)
 	e.GET("api/v1/stats/customerisnotif/:ord", stshandlers.GetTotalCustomerByIsNotif)
+	e.GET("api/v1/stats/cartispaid/:ord", stshandlers.GetTotalCartIsPaid)
+	e.GET("api/v1/stats/shelfisactive/:ord", stshandlers.GetTotalShelfIsActive)
 
 	// =============== Private routes (Admin) ===============
 
