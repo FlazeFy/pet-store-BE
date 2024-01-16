@@ -1,5 +1,10 @@
 package builders
 
+import (
+	"fmt"
+	"pet-store/packages/helpers/converter"
+)
+
 func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	if name == "content_info" {
 		return *firstTable + "_slug," + *firstTable + "_name"
@@ -71,6 +76,58 @@ func GetTemplateCommand(name, tableName, colName string) string {
 		return "UPDATE " + tableName + " SET deleted_at = ? WHERE " + tableName + "." + colName + " = ?"
 	} else if name == "hard_delete" {
 		return "DELETE FROM " + tableName + " WHERE " + tableName + "." + colName + " = ?"
+	}
+	return ""
+}
+
+// Stats
+func GetTemplateStats(ctx, firstTable, name string, ord string, joinArgs *string) string {
+	// Nullable args
+	var args string
+	if joinArgs == nil {
+		args = ""
+	} else {
+		args = *joinArgs
+	}
+	// Notes :
+	// Full query
+	if name == "most_appear" {
+		return "SELECT " + ctx + " as context, " + GetFormulaQuery(nil, "total_item") + " total FROM " + firstTable + " " + args + " GROUP BY " + ctx + " ORDER BY total " + ord
+	}
+
+	return ""
+}
+
+func GetFormulaQuery(colTarget *string, name string) string {
+	if name == "average" {
+		return "CEIL(SUM(" + *colTarget + ") / COUNT(1)) AS "
+	} else if name == "total_item" {
+		return "COUNT(1) AS "
+	} else if name == "total_sum" {
+		return "SUM(" + *colTarget + ") AS "
+	} else if name == "total_condition" {
+		// Column target with condition
+		return "COUNT(CASE WHEN " + *colTarget + " THEN 1 END) AS "
+	} else if name == "max" {
+		return "MAX(" + *colTarget + ") AS "
+	} else if name == "min" {
+		return "MIN(" + *colTarget + ") AS "
+	} else if name == "max_object" || name == "min_object" {
+		prop, err := converter.StringToMap(*colTarget)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return ""
+		}
+
+		toCount, _ := prop["to_count"]
+		toGet, _ := prop["to_get"]
+		fromTable, _ := prop["from_table"]
+
+		if name == "max_object" {
+			return "(SELECT " + toGet + " FROM " + fromTable + " WHERE " + toCount + " = (SELECT MAX(" + toCount + ") FROM " + fromTable + ")) AS "
+		} else if name == "min_object" {
+			return "(SELECT " + toGet + " FROM " + fromTable + " WHERE " + toCount + " = (SELECT MIN(" + toCount + ") FROM " + fromTable + ")) AS "
+		}
 	}
 	return ""
 }

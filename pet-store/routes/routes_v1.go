@@ -6,6 +6,7 @@ import (
 	ctlghandlers "pet-store/modules/catalogs/http_handlers"
 	pplhandlers "pet-store/modules/people/http_handlers"
 	planthandlers "pet-store/modules/plants/http_handlers"
+	stshandlers "pet-store/modules/stats/http_handlers"
 	syshandlers "pet-store/modules/systems/http_handlers"
 	wohandlers "pet-store/modules/warehouse/http_handlers"
 
@@ -58,6 +59,10 @@ func InitV1() *echo.Echo {
 	// Customer
 	e.GET("api/v1/customer/:view", pplhandlers.GetAllCustomer)
 	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile)
+
+	// Stats
+	e.GET("api/v1/stats/animalgender/:ord", stshandlers.GetTotalAnimalByGender)
+	e.GET("api/v1/stats/customerisnotif/:ord", stshandlers.GetTotalCustomerByIsNotif)
 
 	// =============== Private routes (Admin) ===============
 
