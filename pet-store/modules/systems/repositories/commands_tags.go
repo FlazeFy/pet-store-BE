@@ -74,7 +74,7 @@ func PostTag(data echo.Context) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(id, tagSlug, tagName, dt, "1")
+	result, err := stmt.Exec(id, tagSlug, tagName, dt)
 	if err != nil {
 		return res, err
 	}

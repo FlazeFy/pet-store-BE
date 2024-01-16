@@ -41,6 +41,9 @@ func InitV1() *echo.Echo {
 	// Plants
 	e.GET("api/v1/plant/:order", planthandlers.GetAllPlants)
 	e.GET("api/v1/plant/detail/:slug", planthandlers.GetPlantDetailBySlug)
+	e.POST("api/v1/plant", planthandlers.PostPlant)
+	e.DELETE("api/v1/plant/destroy/:id", planthandlers.HardDelPlantBySlug)
+	e.DELETE("api/v1/plant/by/:id", planthandlers.SoftDelPlantBySlug)
 
 	// Catalog (Animal & Plants)
 	e.GET("api/v1/catalog/:order", ctlghandlers.GetAllCatalogs)

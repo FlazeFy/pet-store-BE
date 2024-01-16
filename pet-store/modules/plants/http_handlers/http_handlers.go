@@ -28,3 +28,32 @@ func GetPlantDetailBySlug(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func HardDelPlantBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	result, err := repositories.HardDelPlantBySlug(slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func SoftDelPlantBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	result, err := repositories.SoftDelPlantBySlug(slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func PostPlant(c echo.Context) error {
+	result, err := repositories.PostPlant(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
