@@ -51,6 +51,9 @@ func InitV1() *echo.Echo {
 
 	// Carts
 	e.GET("api/v1/cart/:order", ctlghandlers.GetMyCart)
+	e.POST("api/v1/cart", ctlghandlers.PostCart)
+	e.DELETE("api/v1/cart/destroy/:id", ctlghandlers.HardDelCartById)
+	e.PUT("api/v1/cart/by/:id", ctlghandlers.UpdateCartById)
 
 	// Shelf
 	e.GET("api/v1/shelf/:order", wohandlers.GetAllActiveShelf)

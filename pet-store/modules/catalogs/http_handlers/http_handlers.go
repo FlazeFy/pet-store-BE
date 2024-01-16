@@ -29,3 +29,33 @@ func GetMyCart(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func HardDelCartById(c echo.Context) error {
+	id := c.Param("id")
+	result, err := repositories.HardDelCartById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func PostCart(c echo.Context) error {
+	result, err := repositories.PostCart(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func UpdateCartById(c echo.Context) error {
+	id := c.Param("id")
+
+	result, err := repositories.UpdateCartById(id, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
