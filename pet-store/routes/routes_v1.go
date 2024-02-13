@@ -34,6 +34,10 @@ func InitV1() *echo.Echo {
 	e.POST("api/v1/tag", syshandlers.PostTag)
 	e.DELETE("api/v1/tag/destroy/:id", syshandlers.HardDelTagById)
 
+	// Feedbacks
+	e.POST("api/v1/feedbacks", syshandlers.PostFeedback)
+	e.GET("api/v1/feedbacks/:ord_obj/:ord", syshandlers.GetAllFeedback)
+
 	// Animals
 	e.GET("api/v1/animal/:order", animalhandlers.GetAllAnimals)
 	e.GET("api/v1/animal/detail/:slug", animalhandlers.GetAnimalDetailBySlug)
