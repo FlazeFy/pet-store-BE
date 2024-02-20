@@ -3,6 +3,7 @@ package routes
 import (
 	"net/http"
 	animalhandlers "pet-store/modules/animals/http_handlers"
+	authhandlers "pet-store/modules/auth/http_handlers"
 	ctlghandlers "pet-store/modules/catalogs/http_handlers"
 	pplhandlers "pet-store/modules/people/http_handlers"
 	planthandlers "pet-store/modules/plants/http_handlers"
@@ -23,6 +24,11 @@ func InitV1() *echo.Echo {
 	})
 
 	// =============== Public routes ===============
+
+	// Auth
+	e.POST("api/v1/login", authhandlers.PostLoginUser)
+	e.POST("api/v1/register", authhandlers.PostRegister)
+	e.POST("api/v1/logout", authhandlers.SignOut)
 
 	// Dictionary
 	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)

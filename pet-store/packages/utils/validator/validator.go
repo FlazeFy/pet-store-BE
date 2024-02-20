@@ -10,16 +10,16 @@ func GetValidateEmail(val string) bool {
 }
 
 func GetValidationLength(col string) (int, int) {
-	if col == "username" {
+	if col == "customers_slug" {
 		return 6, 36
 	} else if col == "email" {
 		return 10, 75
 	} else if col == "password" {
 		return 6, 36
-	} else if col == "first_name" {
+	} else if col == "customers_name" {
 		return 1, 36
-	} else if col == "last_name" {
-		return 0, 36
+	} else if col == "owner" {
+		return 36, 36
 	} else if col == "valid_until" {
 		yearNow := time.Now().Year()
 		max := yearNow + 6
