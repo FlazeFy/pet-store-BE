@@ -5,6 +5,7 @@ import (
 	animalhandlers "pet-store/modules/animals/http_handlers"
 	authhandlers "pet-store/modules/auth/http_handlers"
 	ctlghandlers "pet-store/modules/catalogs/http_handlers"
+	gdshandlers "pet-store/modules/goods/http_handlers"
 	pplhandlers "pet-store/modules/people/http_handlers"
 	planthandlers "pet-store/modules/plants/http_handlers"
 	stshandlers "pet-store/modules/stats/http_handlers"
@@ -60,6 +61,9 @@ func InitV1() *echo.Echo {
 
 	// Catalog (Animal & Plants)
 	e.GET("api/v1/catalog/:order", ctlghandlers.GetAllCatalogs)
+
+	// Goods
+	e.GET("api/v1/goods/:order", gdshandlers.GetAllGoods)
 
 	// Carts
 	e.GET("api/v1/cart/:order", ctlghandlers.GetMyCart)
