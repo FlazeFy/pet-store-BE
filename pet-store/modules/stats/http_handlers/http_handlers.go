@@ -58,3 +58,16 @@ func GetTotalShelfIsActive(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetTotalGoodsCategory(c echo.Context) error {
+	ord := c.Param("ord")
+	view := "goods_category"
+	table := "goods"
+
+	result, err := repositories.GetTotalStats("api/v1/stats/goodscategory/"+ord, ord, view, table)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

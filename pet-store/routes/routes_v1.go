@@ -64,6 +64,7 @@ func InitV1() *echo.Echo {
 
 	// Goods
 	e.GET("api/v1/goods/:order", gdshandlers.GetAllGoods)
+	e.DELETE("api/v1/goods/destroy/:id", gdshandlers.HardDelGoodBySlug)
 
 	// Carts
 	e.GET("api/v1/cart/:order", ctlghandlers.GetMyCart)
@@ -84,6 +85,7 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/stats/customerisnotif/:ord", stshandlers.GetTotalCustomerByIsNotif)
 	e.GET("api/v1/stats/cartispaid/:ord", stshandlers.GetTotalCartIsPaid)
 	e.GET("api/v1/stats/shelfisactive/:ord", stshandlers.GetTotalShelfIsActive)
+	e.GET("api/v1/stats/goodscategory/:ord", stshandlers.GetTotalGoodsCategory)
 
 	// =============== Private routes (Admin) ===============
 
