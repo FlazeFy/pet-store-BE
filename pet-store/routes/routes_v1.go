@@ -80,6 +80,9 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/customer/:view", pplhandlers.GetAllCustomer)
 	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile)
 
+	// Doctor
+	e.GET("api/v1/doctor/schedule", pplhandlers.GetAllDoctorSchedule)
+
 	// Stats
 	e.GET("api/v1/stats/animalgender/:ord", stshandlers.GetTotalAnimalByGender)
 	e.GET("api/v1/stats/customerisnotif/:ord", stshandlers.GetTotalCustomerByIsNotif)

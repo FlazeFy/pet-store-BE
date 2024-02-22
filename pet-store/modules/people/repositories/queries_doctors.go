@@ -1,42 +1,32 @@
 package repositories
 
 import (
-	"database/sql"
+	"fmt"
 	"math"
 	"net/http"
-	"pet-store/modules/goods/models"
+	"pet-store/modules/people/models"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
-	"pet-store/packages/helpers/converter"
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
 	"pet-store/packages/utils/pagination"
-	"strconv"
 )
 
-func GetAllGoods(page, pageSize int, path string, ord string) (response.Response, error) {
+func GetAllDoctorSchedule(page, pageSize int, path string) (response.Response, error) {
 	// Declaration
-	var obj models.GetGoods
-	var arrobj []models.GetGoods
+	var obj models.GetDoctorSchedule
+	var arrobj []models.GetDoctorSchedule
 	var res response.Response
-	var baseTable = "goods"
+	var baseTable = "doctors"
 	var sqlStatement string
-
-	// Nullable column
-	var GoodsDesc sql.NullString
-	var GoodsImgUrl sql.NullString
-
-	// Converted column
-	var GoodsPrice string
-	var GoodsStock string
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	order := builders.GetTemplateOrder("dynamic_data", baseTable, "goods_name")
+	joinTemplate := builders.GetTemplateJoin("total", baseTable, "id", "doctors_schedule", "doctors_id", false)
 
-	sqlStatement = "SELECT " + selectTemplate + ", goods_desc, goods_category, goods_img_url, goods_price, goods_stock " +
+	sqlStatement = "SELECT " + selectTemplate + ", schedule_day, schedule_hour " +
 		"FROM " + baseTable + " " +
-		"ORDER BY " + order + " " +
+		joinTemplate + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec
@@ -44,6 +34,7 @@ func GetAllGoods(page, pageSize int, path string, ord string) (response.Response
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
+	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
@@ -52,32 +43,15 @@ func GetAllGoods(page, pageSize int, path string, ord string) (response.Response
 	// Map
 	for rows.Next() {
 		err = rows.Scan(
-			&obj.GoodsSlug,
-			&obj.GoodsName,
-			&GoodsDesc,
-			&obj.GoodsCategory,
-			&GoodsImgUrl,
-			&GoodsPrice,
-			&GoodsStock,
+			&obj.DoctorSlug,
+			&obj.DoctorName,
+			&obj.ScheduleDay,
+			&obj.ScheduleHour,
 		)
 
 		if err != nil {
 			return res, err
 		}
-
-		// Nullable
-		obj.GoodsDesc = converter.CheckNullString(GoodsDesc)
-		obj.GoodsImgUrl = converter.CheckNullString(GoodsImgUrl)
-
-		// Converted
-		intGoodsPrice, err := strconv.Atoi(GoodsPrice)
-		intGoodsStock, err := strconv.Atoi(GoodsStock)
-		if err != nil {
-			return res, err
-		}
-
-		obj.GoodsPrice = intGoodsPrice
-		obj.GoodsStock = intGoodsStock
 
 		arrobj = append(arrobj, obj)
 	}

@@ -27,3 +27,13 @@ func GetMyProfile(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetAllDoctorSchedule(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	result, err := repositories.GetAllDoctorSchedule(page, 10, "api/v1/doctor/schedule")
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
