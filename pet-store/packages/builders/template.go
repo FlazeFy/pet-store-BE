@@ -64,11 +64,33 @@ func GetTemplateGroup(is_multi_where bool, col string) string {
 	return ext + col + " IS NOT NULL AND trim(" + col + ") != '' GROUP BY " + col + " "
 }
 
-func GetTemplateLogic(name string) string {
+func GetTemplateLogic(name string, colTarget *string) string {
 	if name == "active" {
 		return ".deleted_at IS NULL "
 	} else if name == "trash" {
 		return ".deleted_at IS NOT NULL "
+	} else if name == "multi_content" {
+		prop, err := converter.StringToMap(*colTarget)
+		if err != nil {
+			fmt.Println("Error:", err)
+			return ""
+		}
+
+		endAs, _ := prop["end_as"]
+		tableList, _ := prop["table_list"]
+		columnList, _ := prop["column_list"]
+
+		caseStatement := " "
+
+		var i = 0
+		for _, table := range tableList {
+			caseStatement += fmt.Sprintf("WHEN catalog_type = '%s' THEN %s.%s ",
+				&table, &table, columnList[i])
+			i++
+		}
+
+		return "CASE " + caseStatement +
+			"END AS " + endAs
 	}
 	return ""
 }
@@ -134,6 +156,8 @@ func GetFormulaQuery(colTarget *string, name string) string {
 		} else if name == "min_object" {
 			return "(SELECT " + toGet + " FROM " + fromTable + " WHERE " + toCount + " = (SELECT MIN(" + toCount + ") FROM " + fromTable + ")) AS "
 		}
+	} else if name == "hour" {
+		return "CONCAT(EXTRACT(HOUR FROM " + *colTarget + "),':00') AS "
 	}
 	return ""
 }

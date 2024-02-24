@@ -30,7 +30,7 @@ func ConvertStringBool(val string) bool {
 	}
 }
 
-func MapToString(val map[string]string) string {
+func MapToString(val map[string]interface{}) string {
 	result, _ := json.Marshal(val)
 	return string(result)
 }

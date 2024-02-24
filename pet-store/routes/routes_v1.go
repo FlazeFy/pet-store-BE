@@ -2,6 +2,7 @@ package routes
 
 import (
 	"net/http"
+	middlewares "pet-store/middlewares/jwt"
 	animalhandlers "pet-store/modules/animals/http_handlers"
 	authhandlers "pet-store/modules/auth/http_handlers"
 	ctlghandlers "pet-store/modules/catalogs/http_handlers"
@@ -29,7 +30,6 @@ func InitV1() *echo.Echo {
 	// Auth
 	e.POST("api/v1/login", authhandlers.PostLoginUser)
 	e.POST("api/v1/register", authhandlers.PostRegister)
-	e.POST("api/v1/logout", authhandlers.SignOut)
 
 	// Dictionary
 	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)
@@ -90,7 +90,13 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/stats/shelfisactive/:ord", stshandlers.GetTotalShelfIsActive)
 	e.GET("api/v1/stats/goodscategory/:ord", stshandlers.GetTotalGoodsCategory)
 
-	// =============== Private routes (Admin) ===============
+	// =============== Private routes ===============
+
+	// Auth
+	e.POST("api/v1/logout", authhandlers.SignOut, middlewares.CustomJWTAuth)
+
+	// Catalog (Animal & Plants)
+	e.GET("api/v1/catalog/wishlist/my/:order", ctlghandlers.GetMyWishlist, middlewares.CustomJWTAuth)
 
 	return e
 }

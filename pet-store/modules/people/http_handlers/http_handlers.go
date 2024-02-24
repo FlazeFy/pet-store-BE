@@ -29,8 +29,7 @@ func GetMyProfile(c echo.Context) error {
 }
 
 func GetAllDoctorSchedule(c echo.Context) error {
-	page, _ := strconv.Atoi(c.QueryParam("page"))
-	result, err := repositories.GetAllDoctorSchedule(page, 10, "api/v1/doctor/schedule")
+	result, err := repositories.GetAllDoctorSchedule()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

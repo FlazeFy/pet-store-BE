@@ -30,6 +30,17 @@ func GetMyCart(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+func GetMyWishlist(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	ord := c.Param("order")
+	result, err := repositories.GetMyWishlist(page, 10, "api/v1/catalog/wishlist/my/"+ord, ord)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func HardDelCartById(c echo.Context) error {
 	id := c.Param("id")
 	result, err := repositories.HardDelCartById(id)

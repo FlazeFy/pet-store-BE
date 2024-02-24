@@ -26,7 +26,7 @@ func GetAllShelf(page, pageSize int, path string, view string, ord string) (resp
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	firstLogicWhere := builders.GetTemplateLogic(view)
+	firstLogicWhere := builders.GetTemplateLogic(view, nil)
 	whereActive := baseTable + firstLogicWhere
 	order := "shelfs_name " + ord
 
