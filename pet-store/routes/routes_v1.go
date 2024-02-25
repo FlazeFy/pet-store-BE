@@ -82,6 +82,7 @@ func InitV1() *echo.Echo {
 
 	// Doctor
 	e.GET("api/v1/doctor/schedule", pplhandlers.GetAllDoctorSchedule)
+	e.DELETE("api/v1/doctor/destroy/:slug", pplhandlers.HardDelDoctorBySlug)
 
 	// Stats
 	e.GET("api/v1/stats/animalgender/:ord", stshandlers.GetTotalAnimalByGender)
