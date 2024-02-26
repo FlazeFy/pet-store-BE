@@ -70,27 +70,11 @@ func GetTemplateLogic(name string, colTarget *string) string {
 	} else if name == "trash" {
 		return ".deleted_at IS NOT NULL "
 	} else if name == "multi_content" {
-		prop, err := converter.StringToMap(*colTarget)
-		if err != nil {
-			fmt.Println("Error:", err)
-			return ""
-		}
-
-		endAs, _ := prop["end_as"]
-		tableList, _ := prop["table_list"]
-		columnList, _ := prop["column_list"]
-
-		caseStatement := " "
-
-		var i = 0
-		for _, table := range tableList {
-			caseStatement += fmt.Sprintf("WHEN catalog_type = '%s' THEN %s.%s ",
-				&table, &table, columnList[i])
-			i++
-		}
-
-		return "CASE " + caseStatement +
-			"END AS " + endAs
+		return "CASE " +
+			"WHEN catalog_type = 'animals' THEN animals_" + *colTarget + " " +
+			"WHEN catalog_type = 'plants' THEN plants_" + *colTarget + " " +
+			"WHEN catalog_type = 'goods' THEN goods_" + *colTarget + " " +
+			"END AS catalog_" + *colTarget
 	}
 	return ""
 }

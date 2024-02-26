@@ -31,9 +31,22 @@ func GetMyCart(c echo.Context) error {
 }
 
 func GetMyWishlist(c echo.Context) error {
+	token := c.Request().Header.Get("Authorization")
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	ord := c.Param("order")
-	result, err := repositories.GetMyWishlist(page, 10, "api/v1/catalog/wishlist/my/"+ord, ord)
+	result, err := repositories.GetMyWishlist(page, 10, "api/v1/catalog/wishlist/my/"+ord, ord, token)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func GetCheckWishlist(c echo.Context) error {
+	token := c.Request().Header.Get("Authorization")
+	slug := c.Param("slug")
+	types := c.Param("type")
+	result, err := repositories.GetCheckWishlist(token, slug, types)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

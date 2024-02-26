@@ -20,7 +20,8 @@ func GetAllCustomer(c echo.Context) error {
 }
 
 func GetMyProfile(c echo.Context) error {
-	result, err := repositories.GetMyProfile("api/v1/customer/my/profile")
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.GetMyProfile("api/v1/customer/my/profile", token)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

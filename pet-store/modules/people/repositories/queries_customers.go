@@ -8,6 +8,7 @@ import (
 	"pet-store/modules/people/models"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
+	"pet-store/packages/helpers/auth"
 	"pet-store/packages/helpers/converter"
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
@@ -113,7 +114,7 @@ func GetAllCustomer(page, pageSize int, path string, view string) (response.Resp
 	return res, nil
 }
 
-func GetMyProfile(path string) (response.Response, error) {
+func GetMyProfile(path string, token string) (response.Response, error) {
 	// Declaration
 	var obj models.GetCustomersDetail
 	var arrobj []models.GetCustomersDetail
@@ -123,23 +124,25 @@ func GetMyProfile(path string) (response.Response, error) {
 
 	// Nullable column
 	var CustomerEmail sql.NullString
+	var CustomerImage sql.NullString
 	var CustomerInterest sql.NullString
 
 	// Converted column
 	var IsNotifable string
 
+	joinAuth := auth.GetAuthQuery(baseTable, token)
+
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", email, customers_interest, customers_image, is_notifable, created_at " +
+	sqlStatement = "SELECT " + selectTemplate + ", email, customers_interest, customers_image, is_notifable, customers.created_at " +
 		"FROM " + baseTable + " " +
-		"LIMIT 1" // For now
+		joinAuth
 
 	// Exec
 	con := database.CreateCon()
 	rows, err := con.Query(sqlStatement)
 	defer rows.Close()
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
@@ -152,7 +155,7 @@ func GetMyProfile(path string) (response.Response, error) {
 			&obj.CustomerName,
 			&CustomerEmail,
 			&CustomerInterest,
-			&obj.CustomerImage,
+			&CustomerImage,
 			&IsNotifable,
 			&obj.CreatedAt,
 		)
@@ -161,19 +164,17 @@ func GetMyProfile(path string) (response.Response, error) {
 			return res, err
 		}
 
+		// Nullable column
 		obj.CustomerEmail = converter.CheckNullString(CustomerEmail)
 		obj.CustomerInterest = converter.CheckNullString(CustomerInterest)
+		obj.CustomerImage = converter.CheckNullString(CustomerImage)
 
 		obj.IsNotifable = converter.ConvertStringBool(IsNotifable)
 
 		arrobj = append(arrobj, obj)
 	}
 
-	// Page
-	total, err := builders.GetTotalCount(con, baseTable, nil)
-	if err != nil {
-		return res, err
-	}
+	total := len(arrobj)
 
 	// Response
 	res.Status = http.StatusOK

@@ -6,57 +6,43 @@ import (
 	"pet-store/modules/catalogs/models"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
-	"pet-store/packages/helpers/converter"
+	"pet-store/packages/helpers/auth"
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
 	"pet-store/packages/utils/pagination"
 	"strconv"
 )
 
-func GetMyWishlist(page, pageSize int, path string, ord string) (response.Response, error) {
+func GetMyWishlist(page, pageSize int, path string, ord string, token string) (response.Response, error) {
 	// Declaration
 	var obj models.GetMyWishlist
 	var arrobj []models.GetMyWishlist
 	var res response.Response
-	var baseTable = "animals"
+	var baseTable = "wishlists"
 	var sqlStatement string
 
 	// Converted column
 	var CatalogPrice string
 
-	catalogSlugTmt := map[string]interface{}{
-		"end_as":      "catalog_slug",
-		"table_list":  []string{"animals", "plants", "goods"},
-		"column_list": []string{"animals_slug", "plants_slug", "goods_slug"},
-	}
-	catalogPriceTmt := map[string]interface{}{
-		"end_as":      "catalog_price",
-		"table_list":  []string{"animals", "plants", "goods"},
-		"column_list": []string{"animals_price", "plants_price", "goods_price"},
-	}
-	catalogNameTmt := map[string]interface{}{
-		"end_as":      "catalog_name",
-		"table_list":  []string{"animals", "plants", "goods"},
-		"column_list": []string{"animals_name", "plants_name", "goods_name"},
-	}
+	var col1 = "slug"
+	var col2 = "name"
+	var col3 = "price"
 
-	catalogSlugQuery := converter.MapToString(catalogSlugTmt)
-	catalogNameQuery := converter.MapToString(catalogNameTmt)
-	catalogPriceQuery := converter.MapToString(catalogPriceTmt)
-
-	catalogSlugFinalQuery := builders.GetTemplateLogic("multi_content", &catalogSlugQuery)
-	catalogNameFinalQuery := builders.GetTemplateLogic("multi_content", &catalogNameQuery)
-	catalogPriceFinalQuery := builders.GetTemplateLogic("multi_content", &catalogPriceQuery)
+	joinAuth := auth.GetAuthQuery(baseTable, token)
+	catalogSlugQuery := builders.GetTemplateLogic("multi_content", &col1)
+	catalogNameQuery := builders.GetTemplateLogic("multi_content", &col2)
+	catalogPriceQuery := builders.GetTemplateLogic("multi_content", &col3)
 
 	sqlStatement = "SELECT wishlists.catalog_type, catalog_id, " +
-		catalogSlugFinalQuery + " " +
-		catalogNameFinalQuery + " " +
-		catalogPriceFinalQuery + " " +
-		",wishlists.created_at " +
+		catalogSlugQuery + ", " +
+		catalogNameQuery + ", " +
+		catalogPriceQuery + ", " +
+		"wishlists.created_at " +
 		"FROM " + baseTable + " " +
 		"LEFT JOIN animals ON wishlists.catalog_id = animals.id AND wishlists.catalog_type = 'animals' " +
 		"LEFT JOIN plants ON wishlists.catalog_id = plants.id AND wishlists.catalog_type = 'plants' " +
 		"LEFT JOIN goods ON wishlists.catalog_id = goods.id AND wishlists.catalog_type = 'goods' " +
+		joinAuth +
 		"ORDER BY wishlists.created_at " +
 		"LIMIT ? OFFSET ?"
 
@@ -96,12 +82,7 @@ func GetMyWishlist(page, pageSize int, path string, ord string) (response.Respon
 		arrobj = append(arrobj, obj)
 	}
 
-	// Page
-	total, err := builders.GetTotalCount(con, baseTable, nil)
-	if err != nil {
-		return res, err
-	}
-
+	total := len(arrobj)
 	totalPages := int(math.Ceil(float64(total) / float64(pageSize)))
 	pagination := pagination.BuildPaginationResponse(page, pageSize, total, totalPages, path)
 
@@ -126,6 +107,54 @@ func GetMyWishlist(page, pageSize int, path string, ord string) (response.Respon
 			"to":             pagination.To,
 			"total":          total,
 		}
+	}
+
+	return res, nil
+}
+
+func GetCheckWishlist(token, slug, types string) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "wishlists"
+	var sqlStatement string
+	var rowCount int
+
+	var col1 = "slug"
+	joinAuth := auth.GetAuthQuery(baseTable, token)
+	catalogSlugQuery := builders.GetTemplateLogic("multi_content", &col1)
+
+	sqlStatement = "SELECT wishlists.id, " +
+		catalogSlugQuery + " " +
+		"FROM " + baseTable + " " +
+		"LEFT JOIN animals ON wishlists.catalog_id = animals.id AND wishlists.catalog_type = 'animals' " +
+		"LEFT JOIN plants ON wishlists.catalog_id = plants.id AND wishlists.catalog_type = 'plants' " +
+		"LEFT JOIN goods ON wishlists.catalog_id = goods.id AND wishlists.catalog_type = 'goods' " +
+		joinAuth + " " +
+		"HAVING catalog_slug ='" + slug + "' " +
+		"LIMIT 1"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	for rows.Next() {
+		rowCount++
+
+		if err != nil {
+			return res, err
+		}
+	}
+
+	total := rowCount
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, total)
+	if total == 0 {
+		res.Data = false
+	} else {
+		res.Data = true
 	}
 
 	return res, nil

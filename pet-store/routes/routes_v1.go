@@ -78,7 +78,6 @@ func InitV1() *echo.Echo {
 
 	// Customer
 	e.GET("api/v1/customer/:view", pplhandlers.GetAllCustomer)
-	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile)
 	e.DELETE("api/v1/customer/destroy/:slug", pplhandlers.HardDelCustomerBySlug)
 
 	// Doctor
@@ -97,8 +96,12 @@ func InitV1() *echo.Echo {
 	// Auth
 	e.POST("api/v1/logout", authhandlers.SignOut, middlewares.CustomJWTAuth)
 
+	// Customer
+	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile, middlewares.CustomJWTAuth)
+
 	// Catalog (Animal & Plants)
 	e.GET("api/v1/catalog/wishlist/my/:order", ctlghandlers.GetMyWishlist, middlewares.CustomJWTAuth)
+	e.GET("api/v1/catalog/wishlist/check/:type/:slug", ctlghandlers.GetCheckWishlist, middlewares.CustomJWTAuth)
 
 	return e
 }

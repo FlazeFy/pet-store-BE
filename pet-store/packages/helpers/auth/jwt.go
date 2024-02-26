@@ -2,6 +2,8 @@ package auth
 
 import (
 	"pet-store/configs"
+	"pet-store/packages/builders"
+	"strings"
 
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
@@ -48,4 +50,22 @@ func GetTokenHeader(c echo.Context) (bool, string) {
 
 	token := authHeader[len(bearerPrefix):]
 	return true, token
+}
+
+func GetAuthQuery(baseTable, token string) string {
+	token = strings.Replace(token, "Bearer ", "", -1)
+	var prop = "created_by"
+
+	// Query builder
+	if baseTable == "customers" {
+		prop = "id"
+	}
+
+	join := builders.GetTemplateJoin("total", baseTable, prop, "users_tokens", "context_id", false)
+
+	sqlStatement :=
+		join + " " +
+			"WHERE token = '" + token + "' "
+
+	return sqlStatement
 }
