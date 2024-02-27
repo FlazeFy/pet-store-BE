@@ -10,6 +10,7 @@ type (
 		AnimalStock  int    `json:"animals_stock"`
 	}
 	GetAnimalDetail struct {
+		AnimalId       string `json:"animals_id"`
 		AnimalSlug     string `json:"animals_slug"`
 		AnimalName     string `json:"animals_name"`
 		AnimalBio      string `json:"animals_bio"`

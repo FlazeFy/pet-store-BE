@@ -3,6 +3,7 @@ package repositories
 import (
 	"net/http"
 	"pet-store/modules/catalogs/models"
+	"pet-store/packages/builders"
 	"pet-store/packages/database"
 	"pet-store/packages/helpers/auth"
 	"pet-store/packages/helpers/generator"
@@ -50,6 +51,42 @@ func PostWishlist(d models.PostWishlist, token string) (response.Response, error
 	res.Data = map[string]interface{}{
 		"id":            id,
 		"data":          d,
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}
+
+func HardDelWishlistById(id string) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "wishlists"
+	var sqlStatement string
+
+	// Command builder
+	sqlStatement = builders.GetTemplateCommand("hard_delete", baseTable, "id")
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(id)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "permanently delete", int(rowsAffected))
+	res.Data = map[string]int64{
 		"rows_affected": rowsAffected,
 	}
 

@@ -9,6 +9,7 @@ type (
 		PlantStock int    `json:"plants_stock"`
 	}
 	GetPlantDetail struct {
+		PlantId     string `json:"plants_id"`
 		PlantSlug   string `json:"plants_slug"`
 		PlantName   string `json:"plants_name"`
 		PlantBio    string `json:"plants_bio"`

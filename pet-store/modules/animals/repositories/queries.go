@@ -128,7 +128,7 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_full", nil, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", animals_bio, animals_gender, animals_price, animals_stock, animals_date_born, animals_detail, " + propsTemplate + " " +
+	sqlStatement = "SELECT id, " + selectTemplate + ", animals_bio, animals_gender, animals_price, animals_stock, animals_date_born, animals_detail, " + propsTemplate + " " +
 		"FROM " + baseTable + " " +
 		"WHERE animals_slug = '" + slug + "'"
 
@@ -144,6 +144,7 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 	// Map
 	for rows.Next() {
 		err = rows.Scan(
+			&obj.AnimalId,
 			&obj.AnimalSlug,
 			&obj.AnimalName,
 			&obj.AnimalBio,

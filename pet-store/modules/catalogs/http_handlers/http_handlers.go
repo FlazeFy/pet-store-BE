@@ -100,3 +100,13 @@ func PostWishlist(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func HardDelWishlistById(c echo.Context) error {
+	id := c.Param("id")
+	result, err := repositories.HardDelWishlistById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

@@ -123,7 +123,7 @@ func GetPlantDetailBySlug(path string, slug string) (response.Response, error) {
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_full", nil, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", plants_bio, plants_price, plants_stock, plants_detail, " + propsTemplate + " " +
+	sqlStatement = "SELECT id, " + selectTemplate + ", plants_bio, plants_price, plants_stock, plants_detail, " + propsTemplate + " " +
 		"FROM " + baseTable + " " +
 		"WHERE plants_slug = '" + slug + "'"
 
@@ -139,6 +139,7 @@ func GetPlantDetailBySlug(path string, slug string) (response.Response, error) {
 	// Map
 	for rows.Next() {
 		err = rows.Scan(
+			&obj.PlantId,
 			&obj.PlantSlug,
 			&obj.PlantName,
 			&obj.PlantBio,
