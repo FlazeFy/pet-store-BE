@@ -28,7 +28,7 @@ func GetAllCatalogs(page, pageSize int, path string, ord string) (response.Respo
 		"UNION ALL " +
 		"SELECT 'plant' as catalog_type, plants_slug as catalog_slug, plants_name as catalog_name, plants_bio as catalog_bio, 0 as catalog_gender, plants_price as catalog_price, plants_stock as catalog_stock " +
 		"FROM plants " +
-		"ORDER BY catalog_name " +
+		"ORDER BY catalog_name " + ord + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec

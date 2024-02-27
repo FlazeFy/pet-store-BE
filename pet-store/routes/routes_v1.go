@@ -47,14 +47,12 @@ func InitV1() *echo.Echo {
 
 	// Animals
 	e.GET("api/v1/animal/:order", animalhandlers.GetAllAnimals)
-	e.GET("api/v1/animal/detail/:slug", animalhandlers.GetAnimalDetailBySlug)
 	e.POST("api/v1/animal", animalhandlers.PostAnimal)
 	e.DELETE("api/v1/animal/destroy/:id", animalhandlers.HardDelAnimalBySlug)
 	e.DELETE("api/v1/animal/by/:id", animalhandlers.SoftDelAnimalBySlug)
 
 	// Plants
 	e.GET("api/v1/plant/:order", planthandlers.GetAllPlants)
-	e.GET("api/v1/plant/detail/:slug", planthandlers.GetPlantDetailBySlug)
 	e.POST("api/v1/plant", planthandlers.PostPlant)
 	e.DELETE("api/v1/plant/destroy/:id", planthandlers.HardDelPlantBySlug)
 	e.DELETE("api/v1/plant/by/:id", planthandlers.SoftDelPlantBySlug)
@@ -95,6 +93,13 @@ func InitV1() *echo.Echo {
 
 	// Auth
 	e.POST("api/v1/logout", authhandlers.SignOut, middlewares.CustomJWTAuth)
+	e.POST("api/v1/check", authhandlers.CheckRole, middlewares.CustomJWTAuth)
+
+	// Animals
+	e.GET("api/v1/animal/detail/:slug", animalhandlers.GetAnimalDetailBySlug, middlewares.CustomJWTAuth)
+
+	// Plants
+	e.GET("api/v1/plant/detail/:slug", planthandlers.GetPlantDetailBySlug, middlewares.CustomJWTAuth)
 
 	// Customer
 	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile, middlewares.CustomJWTAuth)
