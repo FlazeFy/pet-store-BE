@@ -10,8 +10,8 @@ type (
 		CustomerSlug     string `json:"customer_slug"`
 		CustomerName     string `json:"customer_name"`
 		CustomerEmail    string `json:"email"`
-		CustomerInterest string `json:"customers_interest"`
-		CustomerImage    string `json:"customers_image"`
+		CustomerInterest string `json:"customer_interest"`
+		CustomerImage    string `json:"customer_image"`
 		IsNotifable      bool   `json:"is_notifable"`
 
 		// Props

@@ -17,7 +17,7 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	} else if name == "user_access" {
 		return "context_type, context_id"
 	} else if name == "auth" {
-		return "customers_slug, password"
+		return *firstTable + "s_slug, password"
 	}
 	return ""
 }

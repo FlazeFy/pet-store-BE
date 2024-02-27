@@ -58,7 +58,7 @@ func GetAuthQuery(baseTable, token string) string {
 	var prop = "created_by"
 
 	// Query builder
-	if baseTable == "customers" {
+	if baseTable == "customers" || baseTable == "admins" {
 		prop = "id"
 	}
 

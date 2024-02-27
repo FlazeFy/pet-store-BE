@@ -99,6 +99,9 @@ func InitV1() *echo.Echo {
 	// Customer
 	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile, middlewares.CustomJWTAuth)
 
+	// Admin
+	e.GET("api/v1/admin/my/profile", pplhandlers.GetMyProfileAdmin, middlewares.CustomJWTAuth)
+
 	// Catalog (Animal & Plants)
 	e.GET("api/v1/catalog/wishlist/my/:order", ctlghandlers.GetMyWishlist, middlewares.CustomJWTAuth)
 	e.GET("api/v1/catalog/wishlist/check/:type/:slug", ctlghandlers.GetCheckWishlist, middlewares.CustomJWTAuth)

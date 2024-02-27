@@ -52,7 +52,7 @@ func CheckLogin(c echo.Context, body models.UserLogin) (response.Response, error
 
 	duration := time.Duration(timeExpStr) * time.Second
 
-	id, err, ctx := repositories.PostUserAuth(body.Username, body.Password)
+	id, err, ctx := repositories.PostUserAuth(body.Username, body.Password, body.Role)
 	// Response
 	if err == nil && id == "" {
 		res.Status = http.StatusUnprocessableEntity
@@ -86,7 +86,7 @@ func CheckLogin(c echo.Context, body models.UserLogin) (response.Response, error
 
 	// DB Token
 	var obj models.UserToken
-	obj.ContextType = "user" // For now
+	obj.ContextType = body.Role
 	obj.ContextId = id
 	obj.Token = fmt.Sprintf("%s", t)
 

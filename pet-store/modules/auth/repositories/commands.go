@@ -15,8 +15,8 @@ import (
 	"strings"
 )
 
-func PostUserAuth(username, password string) (string, error, string) {
-	status, msg := validations.GetValidateLogin(username, password)
+func PostUserAuth(username, password, role string) (string, error, string) {
+	status, msg := validations.GetValidateLogin(username, password, role)
 	if status {
 		// Declaration
 		var obj models.UserLogin
@@ -24,11 +24,11 @@ func PostUserAuth(username, password string) (string, error, string) {
 		var id string
 
 		// Exec
-		selectTemplate := builders.GetTemplateSelect("auth", nil, nil)
-		baseTable := "customers"
+		selectTemplate := builders.GetTemplateSelect("auth", &role, nil)
+		baseTable := role + "s"
 		sqlStatement := "SELECT id, " + selectTemplate + " " +
 			"FROM " + baseTable +
-			" WHERE customers_slug = ?"
+			" WHERE " + role + "s_slug = ?"
 
 		con := database.CreateCon()
 		err := con.QueryRow(sqlStatement, username).Scan(

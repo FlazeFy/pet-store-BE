@@ -4,6 +4,7 @@ type (
 	UserLogin struct {
 		Username string `json:"customers_slug" binding:"required"`
 		Password string `json:"password" binding:"required"`
+		Role     string `json:"role" binding:"required"`
 	}
 	UserRegister struct {
 		Username     string `json:"customers_slug" binding:"required"`

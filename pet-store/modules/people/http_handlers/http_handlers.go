@@ -28,6 +28,15 @@ func GetMyProfile(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+func GetMyProfileAdmin(c echo.Context) error {
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.GetMyProfileAdmin("api/v1/admin/my/profile", token)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
 
 func GetAllDoctorSchedule(c echo.Context) error {
 	result, err := repositories.GetAllDoctorSchedule()

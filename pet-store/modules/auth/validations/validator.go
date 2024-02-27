@@ -57,7 +57,7 @@ func GetValidateRegister(body models.UserRegister) (bool, string) {
 	}
 }
 
-func GetValidateLogin(username, password string) (bool, string) {
+func GetValidateLogin(username, password, role string) (bool, string) {
 	var msg = ""
 	var status = true
 
@@ -80,6 +80,10 @@ func GetValidateLogin(username, password string) (bool, string) {
 			msg += ", "
 		}
 		msg += generator.GenerateValidatorMsg("Password", minPass, maxPass)
+	}
+	if role != "admin" && role != "staff" && role != "customer" && role != "doctor" {
+		status = false
+		msg += "Your role is invalid"
 	}
 
 	if status {

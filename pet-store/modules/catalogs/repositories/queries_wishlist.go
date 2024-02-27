@@ -118,6 +118,7 @@ func GetCheckWishlist(token, slug, types string) (response.Response, error) {
 	var baseTable = "wishlists"
 	var sqlStatement string
 	var rowCount int
+	var id string
 
 	var col1 = "slug"
 	joinAuth := auth.GetAuthQuery(baseTable, token)
@@ -139,6 +140,16 @@ func GetCheckWishlist(token, slug, types string) (response.Response, error) {
 	defer rows.Close()
 
 	for rows.Next() {
+		var empty string // useless
+		err = rows.Scan(
+			&id,
+			&empty,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
 		rowCount++
 
 		if err != nil {
@@ -152,9 +163,15 @@ func GetCheckWishlist(token, slug, types string) (response.Response, error) {
 	res.Status = http.StatusOK
 	res.Message = generator.GenerateQueryMsg(baseTable, total)
 	if total == 0 {
-		res.Data = false
+		res.Data = map[string]interface{}{
+			"is_checked": false,
+			"id":         id,
+		}
 	} else {
-		res.Data = true
+		res.Data = map[string]interface{}{
+			"is_checked": true,
+			"id":         id,
+		}
 	}
 
 	return res, nil
