@@ -3,6 +3,7 @@ package auth
 import (
 	"pet-store/configs"
 	"pet-store/packages/builders"
+	"pet-store/packages/database"
 	"strings"
 
 	"github.com/labstack/echo"
@@ -68,4 +69,33 @@ func GetAuthQuery(baseTable, token string) string {
 			"WHERE token = '" + token + "' "
 
 	return sqlStatement
+}
+
+func GetUserIdByToken(token string) string {
+	var sqlStatement string
+	var UserId string
+	token = strings.Replace(token, "Bearer ", "", -1)
+
+	sqlStatement = "SELECT context_id " +
+		"FROM users_tokens " +
+		"WHERE token = '" + token + "' " +
+		"LIMIT 1"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&UserId,
+		)
+
+		if err != nil {
+			return err.Error()
+		}
+	}
+
+	return UserId
 }

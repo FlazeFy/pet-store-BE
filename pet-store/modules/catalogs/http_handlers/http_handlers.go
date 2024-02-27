@@ -2,6 +2,7 @@ package httphandlers
 
 import (
 	"net/http"
+	"pet-store/modules/catalogs/models"
 	"pet-store/modules/catalogs/repositories"
 	"strconv"
 
@@ -77,6 +78,22 @@ func UpdateCartById(c echo.Context) error {
 	id := c.Param("id")
 
 	result, err := repositories.UpdateCartById(id, c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func PostWishlist(c echo.Context) error {
+	var obj models.PostWishlist
+	token := c.Request().Header.Get("Authorization")
+
+	// Data
+	obj.CatalogType = c.FormValue("catalog_type")
+	obj.CatalogId = c.FormValue("catalog_id")
+
+	result, err := repositories.PostWishlist(obj, token)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

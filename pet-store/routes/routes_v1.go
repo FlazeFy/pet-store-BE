@@ -102,6 +102,7 @@ func InitV1() *echo.Echo {
 	// Catalog (Animal & Plants)
 	e.GET("api/v1/catalog/wishlist/my/:order", ctlghandlers.GetMyWishlist, middlewares.CustomJWTAuth)
 	e.GET("api/v1/catalog/wishlist/check/:type/:slug", ctlghandlers.GetCheckWishlist, middlewares.CustomJWTAuth)
+	e.POST("api/v1/catalog/wishlist/add", ctlghandlers.PostWishlist, middlewares.CustomJWTAuth)
 
 	return e
 }

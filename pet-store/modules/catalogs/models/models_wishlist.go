@@ -11,4 +11,8 @@ type (
 		// Props
 		CreatedAt string `json:"created_at"`
 	}
+	PostWishlist struct {
+		CatalogType string `json:"catalog_type"`
+		CatalogId   string `json:"catalog_id"`
+	}
 )

@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"fmt"
 	"math"
 	"net/http"
 	"pet-store/modules/people/models"
@@ -51,7 +50,6 @@ func GetAllCustomer(page, pageSize int, path string, view string) (response.Resp
 		offset := (page - 1) * pageSize
 		rows, err := con.Query(sqlStatement, pageSize, offset)
 		defer rows.Close()
-		fmt.Println(sqlStatement)
 
 		if err != nil {
 			return res, err
