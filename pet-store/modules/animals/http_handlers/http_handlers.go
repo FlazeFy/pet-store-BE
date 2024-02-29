@@ -41,7 +41,8 @@ func HardDelAnimalBySlug(c echo.Context) error {
 
 func SoftDelAnimalBySlug(c echo.Context) error {
 	slug := c.Param("slug")
-	result, err := repositories.SoftDelAnimalBySlug(slug)
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.SoftDelAnimalBySlug(slug, token)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

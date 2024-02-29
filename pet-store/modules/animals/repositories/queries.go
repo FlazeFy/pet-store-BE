@@ -120,6 +120,8 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 	var AnimalDateBorn sql.NullString
 	var UpdatedAt sql.NullString
 	var UpdatedBy sql.NullString
+	var DeletedAt sql.NullString
+	var DeletedBy sql.NullString
 
 	// Converted column
 	var AnimalPrice string
@@ -128,7 +130,7 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_full", nil, nil)
 
-	sqlStatement = "SELECT id, " + selectTemplate + ", animals_bio, animals_gender, animals_price, animals_stock, animals_date_born, animals_detail, " + propsTemplate + " " +
+	sqlStatement = "SELECT id, " + selectTemplate + ", animals_bio, animals_gender, animals_price, animals_stock, animals_date_born, animals_detail, " + propsTemplate + ",deleted_at, deleted_by " +
 		"FROM " + baseTable + " " +
 		"WHERE animals_slug = '" + slug + "'"
 
@@ -159,6 +161,8 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 			&obj.CreatedBy,
 			&UpdatedAt,
 			&UpdatedBy,
+			&DeletedAt,
+			&DeletedBy,
 		)
 
 		if err != nil {
@@ -175,6 +179,8 @@ func GetAnimalDetailBySlug(path string, slug string) (response.Response, error) 
 		obj.AnimalPrice = intAnimalPrice
 		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
 		obj.UpdatedBy = converter.CheckNullString(UpdatedBy)
+		obj.DeletedAt = converter.CheckNullString(DeletedAt)
+		obj.DeletedBy = converter.CheckNullString(DeletedBy)
 
 		arrobj = append(arrobj, obj)
 	}

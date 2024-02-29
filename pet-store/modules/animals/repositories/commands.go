@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
+	"pet-store/packages/helpers/auth"
 	"pet-store/packages/helpers/generator"
 	"pet-store/packages/helpers/response"
 	"time"
@@ -48,12 +49,13 @@ func HardDelAnimalBySlug(slug string) (response.Response, error) {
 	return res, nil
 }
 
-func SoftDelAnimalBySlug(slug string) (response.Response, error) {
+func SoftDelAnimalBySlug(slug, token string) (response.Response, error) {
 	// Declaration
 	var res response.Response
 	var baseTable = "animals"
 	var sqlStatement string
 	dt := time.Now().Format("2006-01-02 15:04:05")
+	id := auth.GetUserIdByToken(token)
 
 	// Command builder
 	sqlStatement = builders.GetTemplateCommand("soft_delete", baseTable, baseTable+"_slug")
@@ -65,7 +67,7 @@ func SoftDelAnimalBySlug(slug string) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(dt, slug)
+	result, err := stmt.Exec(dt, id, slug)
 	if err != nil {
 		return res, err
 	}

@@ -85,7 +85,7 @@ func GetWhereMine(token string) string {
 
 func GetTemplateCommand(name, tableName, colName string) string {
 	if name == "soft_delete" {
-		return "UPDATE " + tableName + " SET deleted_at = ? WHERE " + tableName + "." + colName + " = ?"
+		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "." + colName + " = ?"
 	} else if name == "hard_delete" {
 		return "DELETE FROM " + tableName + " WHERE " + tableName + "." + colName + " = ?"
 	}

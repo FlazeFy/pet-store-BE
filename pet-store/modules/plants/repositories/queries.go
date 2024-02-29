@@ -118,12 +118,14 @@ func GetPlantDetailBySlug(path string, slug string) (response.Response, error) {
 	// Nullable column
 	var UpdatedAt sql.NullString
 	var UpdatedBy sql.NullString
+	var DeletedAt sql.NullString
+	var DeletedBy sql.NullString
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_full", nil, nil)
 
-	sqlStatement = "SELECT id, " + selectTemplate + ", plants_bio, plants_price, plants_stock, plants_detail, " + propsTemplate + " " +
+	sqlStatement = "SELECT id, " + selectTemplate + ", plants_bio, plants_price, plants_stock, plants_detail, " + propsTemplate + ",deleted_at, deleted_by " +
 		"FROM " + baseTable + " " +
 		"WHERE plants_slug = '" + slug + "'"
 
@@ -152,6 +154,8 @@ func GetPlantDetailBySlug(path string, slug string) (response.Response, error) {
 			&obj.CreatedBy,
 			&UpdatedAt,
 			&UpdatedBy,
+			&DeletedAt,
+			&DeletedBy,
 		)
 
 		if err != nil {
@@ -160,6 +164,8 @@ func GetPlantDetailBySlug(path string, slug string) (response.Response, error) {
 
 		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
 		obj.UpdatedBy = converter.CheckNullString(UpdatedBy)
+		obj.DeletedAt = converter.CheckNullString(DeletedAt)
+		obj.DeletedBy = converter.CheckNullString(DeletedBy)
 
 		arrobj = append(arrobj, obj)
 	}

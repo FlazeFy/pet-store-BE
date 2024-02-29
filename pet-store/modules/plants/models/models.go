@@ -22,5 +22,7 @@ type (
 		CreatedBy string `json:"created_by"`
 		UpdatedAt string `json:"updated_at"`
 		UpdatedBy string `json:"updated_by"`
+		DeletedAt string `json:"deleted_at"`
+		DeletedBy string `json:"deleted_by"`
 	}
 )

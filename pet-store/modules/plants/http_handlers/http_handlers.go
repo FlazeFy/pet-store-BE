@@ -41,7 +41,8 @@ func HardDelPlantBySlug(c echo.Context) error {
 
 func SoftDelPlantBySlug(c echo.Context) error {
 	slug := c.Param("slug")
-	result, err := repositories.SoftDelPlantBySlug(slug)
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.SoftDelPlantBySlug(slug, token)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
