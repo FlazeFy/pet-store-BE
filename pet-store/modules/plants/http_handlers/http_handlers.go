@@ -50,6 +50,17 @@ func SoftDelPlantBySlug(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+func RecoverPlantBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.RecoverPlantBySlug(slug, token)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func PostPlant(c echo.Context) error {
 	result, err := repositories.PostPlant(c)
 	if err != nil {

@@ -95,11 +95,13 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/animal/detail/:slug", animalhandlers.GetAnimalDetailBySlug, middlewares.CustomJWTAuth)
 	e.DELETE("api/v1/animal/destroy/:slug", animalhandlers.HardDelAnimalBySlug, middlewares.CustomJWTAuth)
 	e.DELETE("api/v1/animal/by/:slug", animalhandlers.SoftDelAnimalBySlug, middlewares.CustomJWTAuth)
+	e.POST("api/v1/animal/recover/:slug", animalhandlers.RecoverAnimalBySlug, middlewares.CustomJWTAuth)
 
 	// Plants
 	e.GET("api/v1/plant/detail/:slug", planthandlers.GetPlantDetailBySlug, middlewares.CustomJWTAuth)
 	e.DELETE("api/v1/plant/destroy/:slug", planthandlers.HardDelPlantBySlug, middlewares.CustomJWTAuth)
 	e.DELETE("api/v1/plant/by/:slug", planthandlers.SoftDelPlantBySlug, middlewares.CustomJWTAuth)
+	e.POST("api/v1/plant/recover/:slug", planthandlers.RecoverPlantBySlug, middlewares.CustomJWTAuth)
 
 	// Customer
 	e.GET("api/v1/customer/my/profile", pplhandlers.GetMyProfile, middlewares.CustomJWTAuth)

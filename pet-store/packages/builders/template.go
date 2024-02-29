@@ -88,6 +88,8 @@ func GetTemplateCommand(name, tableName, colName string) string {
 		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "." + colName + " = ?"
 	} else if name == "hard_delete" {
 		return "DELETE FROM " + tableName + " WHERE " + tableName + "." + colName + " = ?"
+	} else if name == "recover" {
+		return "UPDATE " + tableName + " SET deleted_at = null, deleted_by = null WHERE " + tableName + "." + colName + " = ?"
 	}
 	return ""
 }
