@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"net/http"
+	"pet-store/modules/systems/models"
 	"pet-store/packages/builders"
 	"pet-store/packages/database"
 	"pet-store/packages/helpers/generator"
@@ -9,7 +10,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/labstack/echo"
 )
 
 func HardDelTagById(id string) (response.Response, error) {
@@ -48,7 +48,7 @@ func HardDelTagById(id string) (response.Response, error) {
 	return res, nil
 }
 
-func PostTag(data echo.Context) (response.Response, error) {
+func PostTag(d models.GetAllTag) (response.Response, error) {
 	// Declaration
 	var res response.Response
 	var baseTable = "tags"
@@ -57,8 +57,7 @@ func PostTag(data echo.Context) (response.Response, error) {
 
 	// Data
 	id := uuid.Must(uuid.NewRandom())
-	tagName := data.FormValue("tags_name")
-	tagSlug := generator.GetSlug(tagName)
+	tagSlug := generator.GetSlug(d.TagName)
 
 	// Template
 	props := builders.GetTemplateSelect("properties_time", nil, nil)
@@ -74,7 +73,7 @@ func PostTag(data echo.Context) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(id, tagSlug, tagName, dt)
+	result, err := stmt.Exec(id, tagSlug, d.TagName, dt)
 	if err != nil {
 		return res, err
 	}

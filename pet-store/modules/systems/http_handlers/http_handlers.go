@@ -41,7 +41,12 @@ func HardDelTagById(c echo.Context) error {
 }
 
 func PostTag(c echo.Context) error {
-	result, err := repositories.PostTag(c)
+	var obj models.GetAllTag
+	// Data
+	obj.TagSlug = c.FormValue("tags_slug")
+	obj.TagName = c.FormValue("tags_name")
+
+	result, err := repositories.PostTag(obj)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
