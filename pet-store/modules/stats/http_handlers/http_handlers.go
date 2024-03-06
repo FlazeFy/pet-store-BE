@@ -71,3 +71,29 @@ func GetTotalGoodsCategory(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetTotalDoctorReady(c echo.Context) error {
+	ord := c.Param("ord")
+	view := "is_active"
+	table := "doctors"
+
+	result, err := repositories.GetTotalStats("api/v1/stats/docready/"+ord, ord, view, table)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func GetTotalWishlistType(c echo.Context) error {
+	ord := c.Param("ord")
+	view := "catalog_type"
+	table := "wishlists"
+
+	result, err := repositories.GetTotalStats("api/v1/stats/wishtype/"+ord, ord, view, table)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

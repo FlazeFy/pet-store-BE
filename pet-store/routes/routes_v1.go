@@ -84,6 +84,8 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/stats/cartispaid/:ord", stshandlers.GetTotalCartIsPaid)
 	e.GET("api/v1/stats/shelfisactive/:ord", stshandlers.GetTotalShelfIsActive)
 	e.GET("api/v1/stats/goodscategory/:ord", stshandlers.GetTotalGoodsCategory)
+	e.GET("api/v1/stats/wishtype/:ord", stshandlers.GetTotalWishlistType)
+	e.GET("api/v1/stats/docready/:ord", stshandlers.GetTotalDoctorReady)
 
 	// =============== Private routes ===============
 
