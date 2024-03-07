@@ -47,6 +47,17 @@ func GetAllDoctorSchedule(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+func GetAllDoctors(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	ord := c.Param("ord")
+	result, err := repositories.GetAllDoctors(page, 10, "api/v1/doctor/data/"+ord, ord)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func HardDelDoctorBySlug(c echo.Context) error {
 	slug := c.Param("slug")
 	result, err := repositories.HardDelDoctorBySlug(slug)
